@@ -22,7 +22,7 @@
         </q-card-actions>
       </q-card>
     </div>
-    <div>An</div>
+    <div>Antest</div>
   </q-page>
 </template>
 
