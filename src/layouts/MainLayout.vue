@@ -23,19 +23,20 @@
       show-if-above
       bordered
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+
+    <q-item  clickable v-ripple to="/customer">
+            <q-item-section avatar>
+              <q-icon name="book_online" />
+            </q-item-section>
+
+            <q-item-section > Customer </q-item-section>
+          </q-item>
+
+
+
+
+
     </q-drawer>
 
     <q-page-container>
@@ -53,7 +54,7 @@ const linksList = [
     title: 'Customer',
     caption: 'quasar.dev',
     icon: 'school',
-    link: '/#/customer'
+    to: '/customer'
   },
 
 
