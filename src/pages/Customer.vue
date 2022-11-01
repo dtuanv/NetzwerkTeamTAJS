@@ -1,28 +1,40 @@
 <template>
   <q-page>
     <div class="flex justify-center q-mt-lg">
-      <q-card style="width:60%">
+      <q-card style="width: 60%">
         <q-card-section>
           <div class="flex justify-center text-h5">Information</div>
         </q-card-section>
         <q-card-actions>
-          <div  style="width:100%">
+          <div style="width: 100%">
             <div>
-              <q-input v-model="customer.numClients"  label="Anzahl der Clients"></q-input>
-
+              <q-input v-model="customer.numClients" label="Anzahl der Clients"></q-input>
             </div>
             <div class="row">
-            <q-input v-model="customer.name"  label="Name" class="col-4"></q-input>
+              <q-input v-model="customer.name" label="Name" class="col-4"></q-input>
               <div class="col-2"></div>
-              <q-input v-model="customer.numHosts"  label=" Anzahl der Hosts" class="col-6"></q-input>
+              <q-input
+                v-model="customer.numHosts"
+                label=" Anzahl der Hosts"
+                class="col-6"
+              ></q-input>
             </div>
+            <q-input v-model="customer.ip" label="IP "></q-input>
 
-            <q-btn type="submit" icon-right="cloud_upload" color="positive" label="Submit" dense class=" q-mt-lg float-right" ></q-btn>
+            <q-btn
+              type="submit"
+              icon-right="cloud_upload"
+              color="positive"
+              label="Submit"
+              dense
+              class="q-mt-lg float-right"
+            ></q-btn>
           </div>
         </q-card-actions>
       </q-card>
     </div>
-    <div>Antest</div>
+    <div>Antest::{{ customer.ip }}</div>
+    <q-btn label="CHECK IP :" @click="check(customer.ip)"></q-btn>
   </q-page>
 </template>
 
@@ -33,15 +45,55 @@ import { useStore } from "vuex";
 
 import { useQuasar } from "quasar";
 import { useRoute, useRouter } from "vue-router";
-const customer = ref({})
+import { mathIp } from "src/ipCalculate/logicCalculateIp";
+const customer = ref({});
+const checkBoolean = ref("show Check");
+
+const netzs = [{ label: "Name 1: " }];
 export default {
-  setup(){
+  setup() {
+    const $q = useQuasar()
+    const mathIpi = new mathIp();
+    mathIpi.checkIp(customer.ip);
+
+    // console.log("checkIp: ",checkIp(customer.ip))
+    console.log("checkIp: ", customer.ip);
+    console.log("checkIp mathIp: ", mathIpi.checkIp(customer.ip));
+    console.log("checkIp mathIp: ip ", mathIpi.checkIp("192.165.1.1"));
+    // if (mathIpi.checkIp(customer.ip)) {
+    //   console.log("check");
+    //   checkBoolean = "TRUE";
+    // }
 
 
-    return{
+    // checkIp(customer.ip.value)
+
+    return {
+
       customer,
-    }
-  }
-}
+    };
+  },
+  methods:{
+ check(ip) {
+      const mathIpi = new mathIp()
+        if (mathIpi.checkIp(ip) ) {
+          ip = ip.split(".")
+    console.log("Show ip after split :", ip);
 
+          console.log("ip correct");
+          // checkBoolean = "TRUE";
+        }else{
+          this.$q.notify({
+             message: 'Bitte geben Sie eine richtige IP Adreese ',
+          icon: 'announcement',
+          color: 'negative'
+          })
+          console.log("No check")
+        }
+      },
+  },
+  computed: {
+
+  },
+};
 </script>
