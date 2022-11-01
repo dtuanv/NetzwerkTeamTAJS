@@ -1,7 +1,11 @@
 <template>
   <q-page>
     <div class="flex justify-center q-mt-lg">
+
+
+
       <q-card style="width: 60%">
+       <q-form @submit="onSubmit">
         <q-card-section>
           <div class="flex justify-center text-h5">Information</div>
         </q-card-section>
@@ -31,10 +35,27 @@
             ></q-btn>
           </div>
         </q-card-actions>
+         </q-form>
       </q-card>
+
     </div>
     <div>Antest::{{ customer.ip }}</div>
-    <q-btn label="CHECK IP :" @click="check(customer.ip)"></q-btn>
+    <q-btn label="CHECK IP :" @click="check(customer.ip,customer.numHosts)"></q-btn>
+
+    <q-dialog v-model="ip_dialog">
+      <q-card>
+        <q-card-section>
+          <div></div>
+        </q-card-section>
+        <q-card-actions>
+            <div>
+              hi
+            </div>
+
+        </q-card-actions>
+      </q-card>
+
+    </q-dialog>
   </q-page>
 </template>
 
@@ -46,7 +67,9 @@ import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import { useRoute, useRouter } from "vue-router";
 import { mathIp } from "src/ipCalculate/logicCalculateIp";
-const customer = ref({});
+const customer = ref({
+  WildCast:''
+});
 const checkBoolean = ref("show Check");
 
 const netzs = [{ label: "Name 1: " }];
@@ -71,16 +94,25 @@ export default {
     return {
 
       customer,
+      ip_dialog:ref(false),
+
     };
   },
   methods:{
- check(ip) {
+   onSubmit(){
+      this.check(this.customer.ip,this.customer.numHosts)
+      console.log("customer ", customer.value)
+    },
+
+ check(ip,suffix) {
       const mathIpi = new mathIp()
         if (mathIpi.checkIp(ip) ) {
-          ip = ip.split(".")
-    console.log("Show ip after split :", ip);
+          // mathIp.findBroadcast(27,ip)
+          const mathIpi2 = new mathIp()
+          this.customer.broadcast = mathIpi2.findBroadcast(parseInt(suffix) + 2 ,ip).join('.')
+          this.customer.WildCast = mathIpi2.findWildCard()
+         this.ip_dialog=true
 
-          console.log("ip correct");
           // checkBoolean = "TRUE";
         }else{
           this.$q.notify({

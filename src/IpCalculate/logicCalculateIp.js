@@ -1,6 +1,10 @@
 // var per = 0;
 export class mathIp {
 
+  netzmaske = [255, 255, 255, 255];
+  valueDezimalOfWildcardPerNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
+  wildCard = [0, 0, 0, 0];
+  indexNetzmaskeNsisaL = [];
 
   checkIp(ip) {
     if (ip == undefined || ip == null) {
@@ -32,117 +36,104 @@ export class mathIp {
   }
 
   convertToInt(ip) {
-    arr = ip.split(".")
-    for (var i = 0; i < arr.length; i++) arr[i] = parseInt(arr[i]);
-    return arr;
+
+    ip = ip.split(".")
+    for (var i = 0; i < ip.length; i++) ip[i] = parseInt(ip[i]);
+    return ip;
   }
 
-  // jadiInt(arr) {
-  //      for (var i = 0; i < arr.length; i++)
-  //          arr[i] = parseInt(arr[i]);
-  //      return arr;
-  //  }
+  findNumOfNullInLeftHost(suffix) {
+    var arr = [];
+    var index = 0;
+ var listMilestonedHost = [8, 16, 24, 32];
+
+    for( var i = 0; i <listMilestonedHost.length; i++){
+      if(listMilestonedHost[i] > suffix) {
+        arr.push(listMilestonedHost[i] - suffix) ;
+        arr.push(index);
+      }
+      index ++;
+    }
+    return arr;
+  }
+  findNetzMaskeInAList(suffix){
+    const numberOfBitsLeftForHost = this.findNumOfNullInLeftHost(suffix)[0]
+    const indexNetzmaske = this.findNumOfNullInLeftHost(suffix)[1]
+
+
+    for( var i = 0; i< this.netzmaske.length; i++){
+
+      if(i > indexNetzmaske){
+        this.netzmaske[i] = 0
+      }else if(i == indexNetzmaske) {
+        this.netzmaske[i] = this.netzmaske[i] - this.valueDezimalOfWildcardPerNullPosition[numberOfBitsLeftForHost]
+      }
+    }
+    return this.netzmaske
+  }
+
+  convertNetzMaskeToString(suffix){
+   const  netzMaskeArr = this.findNetzMaskeInAList(suffix)
+  return  netzMaskeArr.join('.')
 }
 
-// {
+findBroadcast(suffix,ip){
 
-//            /*IP*/
-//            var ip = $("#ip").val();
+  ip = this.convertToInt(ip)
+  const broadcast = ip
+  const numberOfBitsLeftForHost = this.findNumOfNullInLeftHost(suffix)[0]
+  const indexNetzmaske = this.findNumOfNullInLeftHost(suffix)[1]
+  for(var i = 0; i < broadcast.length; i++){
+    if(i > indexNetzmaske){
+      broadcast[i] = 255;
+    }
+    else if (i == indexNetzmaske){
+      broadcast[i] = broadcast[i] + this.valueDezimalOfWildcardPerNullPosition[numberOfBitsLeftForHost];
+    }
+  }
+  return broadcast;
+}
 
-//            ip = ip.split(".");
+  findWildCard(){
+    for(var i = 0; i < this.wildCard.length;i++){
+      this.wildCard[i] = Math.abs(this.netzmaske[i] - 255);
 
-//            function jadiInt(arr) {
-//                for (var i = 0; i < arr.length; i++)
-//                    arr[i] = parseInt(arr[i]);
-//                return arr;
-//            }
-//            ip = jadiInt(ip);
-//            var listIP = [8, 16, 24, 32];
-//            var dns = [255, 255, 255, 255];
-//            var daftarBiner = [0, 1, 3, 7, 15, 31, 63, 127, 255];
-//            var wildCard = [0, 0, 0, 0];
-//            var indexDnsNsisaL = [];
+    }
+    return this.wildCard.join(".")
+  }
 
-//            function cariAntara(n) {
-//                var an = 0;
-//                var arr = [];
-//                var index = 0;
-//                for (var i = 0; i < listIP.length; i++) {
-//                    if (listIP[i] > n) {
-//                        arr.push(listIP[i] - n);
-//                        arr.push(index);
-//                    }
-//                    index++;
-//                }
-//                return arr;
-//            }
-//            var sisa = cariAntara(per)[0];
-//            /*DNS*/
-//            var indexDns = cariAntara(per)[1];
 
-//            function cariDns(index) {
-//                for (var i = 0; i < dns.length; i++) {
-//                    if (i > index)
-//                        dns[i] = 0;
-//                    else if (i == index)
-//                        dns[i] = dns[i] - daftarBiner[sisa];
-//                }
-//            }
-//            cariDns(indexDns);
-//            var dnsHasil = "";
 
-//            function cetak(arr) {
-//                var hasil = "";
-//                for (var i = 0; i < arr.length; i++) {
-//                    hasil += arr[i];
-//                    i < arr.length - 1 ? hasil += "." : "";
-//                }
-//                return hasil;
-//            }
-//            dnsHasil = cetak(dns);
-//            // $("#dnsHasil").html(dnsHasil);
 
-//            // $("#network").html(cetak(ip));
-//            // var firstHost = ip;
-//            // firstHost[3] += 1;
 
-//            // $("#firstHost").html(cetak(firstHost));
-//            /*Broadcast*/
-//            function cariBroadcast() {
-//                for (var i = 0; i < ip.length; i++) {
-//                    if (i > indexDns)
-//                        ip[i] = 255;
-//                    else if (i == indexDns)
-//                        ip[i] = ip[i] + daftarBiner[sisa];
-//                }
-//            }
-//            cariBroadcast();
-//            ip[3] -= 1;
-//            // $("#broadcast").html(cetak(ip));
-//            var lastHost = ip;
-//            lastHost[3] -= 1;
-//            // $("#lastHost").html(cetak(lastHost));
-//            /*WildCard*/
-//            function cariWildCard() {
-//                for (var i = 0; i < wildCard.length; i++)
-//                    wildCard[i] = Math.abs(dns[i] - 255);
-//            }
-//            cariWildCard();
-//            // $("#wildCard").html(cetak(wildCard));
 
-//    $("span#kanan").click(function () {
-//        $("#main .hasil").removeClass("removeMargin");
-//        $("#main .cal .form").removeClass("shadow");
-//    });
-//    $("#slider-Per").slider({
-//        range: "max"
-//        , min: 1
-//        , max: 30
-//        , value: 1
-//        , slide: function (event, ui) {
-//            $("#amount").html(ui.value);
-//            per = ui.value;
-//        }
-//    });
+
+}
+
+// export class findSubnetMask{
+
+//    listStandardHost = [8, 16, 24, 32];
+//    dns = [255, 255, 255, 255];
+//    subValueOfNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
+//    wildCard = [0, 0, 0, 0];
+//    indexDnsNsisaL = [];
+
+//     findSuffix(per){
+//       var arr = [];
+//       var index = 0;
+//       for( var i = 0; i <listStandardHost.length; i++){
+//         if(listStandardHost[i] > per) {
+//           arr.push(listStandardHost[i] - per - 2) ;
+//           arr.push(index);
+//         }
+//         index ++;
+//       }
+//       return arr;
+//     }
 
 // }
+
+
+
+
+
