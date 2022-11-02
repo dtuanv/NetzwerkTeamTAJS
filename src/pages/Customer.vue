@@ -25,15 +25,29 @@
                   ></q-input>
                 </div>
                 <q-input v-model="customer.ip" label="IP "></q-input>
+                <div class="row">
+                <div class="col-6 q-mt-lg q-ml-lg">
+                   <q-btn
+                   dense
+                    label="CHECK IP :"
+                    @click="
+                      check(customer.ip, customer.numHosts), (notShow_dialog = false)
+                    "
+                  ></q-btn>
+                </div>
 
-                <q-btn
-                  type="submit"
-                  icon-right="cloud_upload"
-                  color="positive"
-                  label="Submit"
-                  dense
-                  class="q-mt-lg float-right"
-                ></q-btn>
+                  <div class="col-5">
+                     <q-btn
+                    type="submit"
+                    icon-right="cloud_upload"
+                    color="positive"
+                    label="Submit"
+                    dense
+                    class="q-mt-lg float-right"
+                  ></q-btn>
+                  </div>
+
+                </div>
               </div>
             </q-card-actions>
           </q-form>
@@ -41,28 +55,21 @@
       </div>
     </div>
 
-    <div>
-   <div>Antest::{{ customer.ip }}</div>
-    <q-btn
-      label="CHECK IP :"
-      @click="check(customer.ip, customer.numHosts), (notShow_dialog = false)"
-    ></q-btn>
 
-    </div>
 
-    <!-- v-if="ip_dialog" style="width: 60%" -->
-    <div v-if="true" class="flex justify-center q-mt-lg">
-      <q-card style="width: 60%" >
+    <!-- v-if="result_card" style="width: 60%" -->
+    <div v-if="result_card" class="flex justify-center q-mt-lg">
+      <q-card style="width: 60%">
         <q-card-section>
-          <div></div>
+          <div class="flex flex-center text-h5">Ergebnis</div>
         </q-card-section>
         <q-card-actions>
-          <div>
-            <div>Natzmask: {{ customer.netzmask }}</div>
+          <div >
+            <div class="q-ml-xl " >Natzmask: {{ customer.netzmask }}</div>
 
-            <div>Wildcast: {{ customer.wildcard }}</div>
+            <div class="q-ml-xl q-mt-sm">Wildcast: {{ customer.wildcard }}</div>
 
-            <div>Broadcast : {{ customer.broadcast }}</div>
+            <div class="q-ml-xl q-mt-sm ">Broadcast : {{ customer.broadcast }}</div>
           </div>
         </q-card-actions>
       </q-card>
@@ -103,7 +110,7 @@ export default {
 
     return {
       customer,
-      ip_dialog: ref(false),
+      result_card: ref(false),
       notShow_dialog: false,
     };
   },
@@ -127,7 +134,7 @@ export default {
         );
         this.customer.netzmask = mathIpi2.convertNetzMaskeToString(parseInt(hostNum) + 2);
         if (this.notShow_dialog != true) {
-          this.ip_dialog = true;
+          this.result_card = true;
         }
 
         // checkBoolean = "TRUE";
