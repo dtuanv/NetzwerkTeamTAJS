@@ -91,12 +91,13 @@ findBroadcast(suffix,ip){
       broadcast[i] = broadcast[i] + this.valueDezimalOfWildcardPerNullPosition[numberOfBitsLeftForHost];
     }
   }
+  // broadcast[3] = broadcast[3] - 1
   return broadcast;
 }
 
-  findWildCard(){
+  findWildCard(netzmaske){
     for(var i = 0; i < this.wildCard.length;i++){
-      this.wildCard[i] = Math.abs(this.netzmaske[i] - 255);
+      this.wildCard[i] = Math.abs(netzmaske[i] - 255);
 
     }
     return this.wildCard.join(".")

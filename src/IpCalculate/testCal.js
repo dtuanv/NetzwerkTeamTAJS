@@ -7,7 +7,7 @@ valueDezimalOfWildcardsuffixNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
 wildCard = [0, 0, 0, 0];
 indexNetzmaskeNsisaL = [];
 
-function findNumOfNull(suffix) {
+function findNumOfNullInLeftHost(suffix) {
    var arr = [];
    var index = 0;
    for( var i = 0; i <listMilestonedHost.length; i++){
@@ -23,8 +23,8 @@ function findNumOfNull(suffix) {
 
 
 function findNetzMaskeInAList(suffix){
-  const numberOfBitsLeftForHost = findNumOfNull(suffix)[0]
-  const indexNetzmaske = findNumOfNull(suffix)[1]
+  const numberOfBitsLeftForHost = findNumOfNullInLeftHost(suffix)[0]
+  const indexNetzmaske = findNumOfNullInLeftHost(suffix)[1]
 
 
   for( var i = 0; i< netzmaske.length; i++){
@@ -56,8 +56,8 @@ function convertNetzMaskeToString(suffix){
     }
     ip = convertToInt(ip)
 function setBroadcast(suffix){
-  const numberOfBitsLeftForHost = findNumOfNull(suffix)[0]
-  const indexNetzmaske = findNumOfNull(suffix)[1]
+  const numberOfBitsLeftForHost = findNumOfNullInLeftHost(suffix)[0]
+  const indexNetzmaske = findNumOfNullInLeftHost(suffix)[1]
   for(var i = 0; i < ip.length; i++){
     if(i > indexNetzmaske){
       ip[i] = 255;
