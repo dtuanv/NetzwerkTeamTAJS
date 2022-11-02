@@ -64,8 +64,13 @@
           <div class="flex flex-center text-h5">Ergebnis</div>
         </q-card-section>
         <q-card-actions>
+<<<<<<< HEAD
           <div >
             <div class="q-ml-xl " >Natzmask: {{ customer.netzmask }}</div>
+=======
+          <div>
+            <div>Netzmask: {{ customer.netzmask }}</div>
+>>>>>>> a69c7832345d4b00af16cd179387855abf056452
 
             <div class="q-ml-xl q-mt-sm">Wildcast: {{ customer.wildcard }}</div>
 
