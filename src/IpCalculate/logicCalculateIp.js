@@ -35,6 +35,20 @@ export class mathIp {
     return betul;
   }
 
+  listMilestoned = [1,2,4,8,16,32,64,128]
+ findSuffix(numHost){
+  var num = parseInt(numHost) + 2
+  var suffix = 32
+  for(var i = 0; i < this.listMilestoned.length; i++){
+    if(num < this.listMilestoned[i]){
+      suffix = suffix - i
+      break
+    }
+  }
+  return suffix;
+}
+
+
   convertToInt(ip) {
 
     ip = ip.split(".")
