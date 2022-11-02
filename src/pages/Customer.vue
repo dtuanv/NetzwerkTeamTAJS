@@ -65,7 +65,7 @@
         </q-card-section>
         <q-card-actions>
           <div >
-            <div class="q-ml-xl ">Netzmask: {{ customer.netzmask }}</div>
+            <div class="q-ml-xl ">Netzmaske: {{ customer.netzmask }}</div>
             <div class="q-ml-xl q-mt-sm">Wildcast: {{ customer.wildcard }}</div>
             <div class="q-ml-xl q-mt-sm ">Broadcast : {{ customer.broadcast }}</div>
           </div>
