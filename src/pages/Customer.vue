@@ -22,7 +22,6 @@
                 </div>
 
                 <div v-for="(customer, index) in customers" :key="index">
-
                   <div class="row">
                     <q-input
                       v-model="customer.name"
@@ -45,7 +44,7 @@
                     ></q-btn>
                   </div>
 
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="col-6 q-mt-lg q-ml-lg">
                       <q-btn
                         dense
@@ -56,7 +55,7 @@
                         "
                       ></q-btn>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
 
                 <div>
@@ -99,9 +98,36 @@
       </div>
     </div>
 
-<!-- <div>customers: {{customers[1]}}</div> -->
+    <!-- <div>customers: {{customers[1]}}</div> -->
 
     <!-- v-if="result_dialog" style="width: 60%" -->
+    <div class="flex justify-center q-mt-lg">
+      <div style="width: 60%">
+        <div class="col-12 flex flex-center text-h5" style="background-color: blanchedalmond;">Result</div>
+
+        <div v-for="(customer, index) in customers" :key="index">
+          <q-card class="q-mt-lg">
+            <q-card-actions class="q-pl-lg">
+              <div class="row col-12">
+              <div class="col-6 q-mt-sm">
+              Netzname : {{ customer.name }}
+              </div>
+              <div  class="col-5 q-mt-sm">Anzahl Hosts: {{customer.numHosts}}</div>
+              </div>
+              <div class="row col-12">
+                <div class="col-6 q-mt-sm">Netzadresse : {{ customer.ipAddress }}</div>
+                <div class="col-5 q-mt-sm">Suffix : {{ customer.suffix }}</div>
+              </div>
+
+              <div class="row col-12">
+                <div class="col-6 q-mt-sm">Netzmask : {{ customer.netzmask }}</div>
+                <div class="col-5 q-mt-sm">broadcast : {{ customer.broadcast }}</div>
+              </div>
+            </q-card-actions>
+          </q-card>
+        </div>
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -127,7 +153,6 @@ export default {
     // mathIpi.checkIp(ipAddress.value);
 
     // console.log("checkIp: ",checkIp(customer.ip))
-    console.log("checkIp: ", ipAddress.value);
     // console.log("checkIp mathIp: ", mathIpi.checkIp(ipAddress));
     // console.log("checkIp mathIp: ip ", mathIpi.checkIp("192.165.1.1"));
     // if (mathIpi.checkIp(customer.ip)) {
@@ -156,10 +181,11 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log("this.customers.length", this.customers.length);
-      console.log("this.customers", this.customers);
+          this.customers[0].ipAddress = this.ipAddress;
+
       for (var i = 0; i < this.customers.length; i++) {
         var hostNum = this.customers[0].numHosts;
+
         this.check(this.ipAddress, hostNum, 0);
         console.log("i: ", i);
         if (i > 0) {
@@ -170,11 +196,12 @@ export default {
           var endBroadcast = (parseInt(broadcastArr[3]) + 1).toString();
           broadcastArr[3] = endBroadcast;
           var firstIp = broadcastArr.join(".");
-          console.log("firstIp", firstIp);
+          // console.log("firstIp", firstIp);
           //     const mathIpi = new mathIp();
 
           //  var suffix =   mathIpi.findSuffix(this.customers[i].numHosts)
           //     console.log("Suffixxxxxx: " ,suffix)
+          this.customers[i].ipAddress = firstIp;
           this.check(firstIp, this.customers[i].numHosts, i);
         }
 
@@ -188,9 +215,9 @@ export default {
       const mathIpi = new mathIp();
 
       var suffix = mathIpi.findSuffix(hostNum);
-      console.log("Suffixxxxxx: ", suffix);
       if (mathIpi.checkIp(ip)) {
         // mathIp.findBroadcast(27,ip)
+         this.customers[index].suffix = suffix
         const mathIpi2 = new mathIp();
         this.customers[index].broadcast = mathIpi2
           .findBroadcast(suffix, ip)
