@@ -36,16 +36,24 @@ export class mathIp {
   }
 
   listMilestoned = [1,2,4,8,16,32,64,128]
- findSuffix(numHost){
+
+
+// find suffix
+
+
+findSuffix(numHost){
   var num = parseInt(numHost) + 2
-  var suffix = 32
-  for(var i = 0; i < this.listMilestoned.length; i++){
-    if(num < this.listMilestoned[i]){
-      suffix = suffix - i
-      break
-    }
-  }
-  return suffix;
+  var numNull = 0
+if(Number.isInteger(Math.log2(num))){
+   numNull = parseInt(Math.log2(num))
+
+}else{
+   numNull = parseInt(Math.log2(num)) + 1
+
+}
+ var  suffix = 32 - numNull
+
+  return suffix ;
 }
   convertToInt(ip) {
 
@@ -60,7 +68,7 @@ export class mathIp {
  var listMilestonedHost = [8, 16, 24, 32];
 
     for( var i = 0; i <listMilestonedHost.length; i++){
-      if(listMilestonedHost[i] > suffix) {
+      if(listMilestonedHost[i] >= suffix) {
         arr.push(listMilestonedHost[i] - suffix) ;
         arr.push(index);
       }
@@ -98,6 +106,7 @@ findBroadcast(suffix,ip){
   for(var i = 0; i < broadcast.length; i++){
     if(i > indexNetzmaske){
       broadcast[i] = 255;
+
     }
     else if (i == indexNetzmaske){
       broadcast[i] = broadcast[i] + this.valueDezimalOfWildcardPerNullPosition[numberOfBitsLeftForHost];

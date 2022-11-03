@@ -7,18 +7,24 @@ valueDezimalOfWildcardsuffixNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
 wildCard = [0, 0, 0, 0];
 indexNetzmaskeNsisaL = [];
 listMilestoned = [1,2,4,8,16,32,64,128]
+// function findSuffix(numHost){
+//   var num = parseInt(numHost) + 2
+//   var suffix = 32
+//   for(var i = 0; i < this.listMilestoned.length; i++){
+//     if(num < this.listMilestoned[i]){
+//       suffix = suffix - i
+//       break
+//     }
+//   }
+//   return suffix;
+// }
 function findSuffix(numHost){
   var num = parseInt(numHost) + 2
-  var suffix = 32
-  for(var i = 0; i < this.listMilestoned.length; i++){
-    if(num < this.listMilestoned[i]){
-      suffix = suffix - i
-      break
-    }
-  }
-  return suffix;
+  var suffix = Math.log2(num)
+
+  return parseInt(suffix) + 1 ;
 }
-console.log("suffix", findSuffix('25'))
+// console.log("suffix", findSuffix('5'))
 
 
 function findNumOfNullInLeftHost(suffix) {

@@ -18,7 +18,23 @@
                 <div class="row">
                   <q-input class="col-4" v-model="ipAddress" label="IP "></q-input>
                   <div class="col-2"></div>
-                  <!-- <q-input class="col-4" v-model="companyName" label="Firma "></q-input> -->
+                  <q-input
+                    class=""
+                    v-model="hosts"
+                    label="Suffix"
+                    style="width: 57px"
+                  ></q-input>
+
+                  <q-btn
+                    @click="findNumHostFromSuffix(hosts)"
+                    label="Zur Hosts"
+                    class="col-1 q-ml-sm"
+                    color="positive"
+                  ></q-btn>
+                  <div class="col-3 q-ml-lg" style="align-self: self-end">
+                    <div>Von: {{ suffixMinResult }} ,</div>
+                    <div>Bis: {{ suffixMaxResult }}</div>
+                  </div>
                 </div>
 
                 <div v-for="(subnet, index) in subnets" :key="index">
@@ -126,7 +142,7 @@
                 <div class="col-5 q-mt-sm">broadcast : {{ subnet.broadcast }}</div>
               </div>
               <div>
-              <div class="col-6 q-mt-sm">wildcard : {{ subnet.wildcard }}</div>
+                <div class="col-6 q-mt-sm">wildcard : {{ subnet.wildcard }}</div>
               </div>
             </q-card-actions>
           </q-card>
@@ -150,6 +166,9 @@ const checkBoolean = ref("show Check");
 const netzs = [{ label: "Name 1: " }];
 const ipAddress = ref("");
 const companyName = ref("");
+const hosts = ref("");
+const suffixMaxResult = ref(0);
+const suffixMinResult = ref(0);
 const subnets = ref([{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]);
 export default {
   setup() {
@@ -171,6 +190,9 @@ export default {
       result_dialog: ref(false),
       notShow_dialog: false,
       subnets,
+      suffixMaxResult,
+      suffixMinResult,
+      hosts,
       companyName,
       ipAddress,
       addInput() {
@@ -185,9 +207,14 @@ export default {
     };
   },
   methods: {
+    findNumHostFromSuffix(suffix) {
+      var x = 32 - parseInt(suffix);
+      this.suffixMaxResult = Math.pow(2, x) - 2;
+      this.suffixMinResult = Math.pow(2, x - 1) - 1;
+    },
     onSubmit() {
-          this.subnets = this.subnets.sort((a, b)=> b.numHosts - a.numHosts)
-          this.subnets[0].ipAddress = this.ipAddress;
+      this.subnets = this.subnets.sort((a, b) => b.numHosts - a.numHosts);
+      this.subnets[0].ipAddress = this.ipAddress;
 
       for (var i = 0; i < this.subnets.length; i++) {
         var hostNum = this.subnets[0].numHosts;
@@ -196,14 +223,20 @@ export default {
         console.log("i: ", i);
         if (i > 0) {
           var broadcastArr = this.subnets[i - 1].broadcast.split(".");
-          var endBroadcast = (parseInt(broadcastArr[3]) + 1).toString();
-          broadcastArr[3] = endBroadcast;
-          var firstIp = broadcastArr.join(".");
-          // console.log("firstIp", firstIp);
-          //     const mathIpi = new mathIp();
+          var checkNumEndBroadcast = parseInt(broadcastArr[3]);
 
-          //  var suffix =   mathIpi.findSuffix(this.subnets[i].numHosts)
-          //     console.log("Suffixxxxxx: " ,suffix)
+
+          if (checkNumEndBroadcast == 255) {
+
+            broadcastArr[3] = 0;
+            broadcastArr[2] = parseInt(broadcastArr[2]) + 1;
+          } else {
+            var endBroadcast = (parseInt(broadcastArr[3]) + 1).toString();
+            broadcastArr[3] = endBroadcast;
+          }
+
+          var firstIp = broadcastArr.join(".");
+
           this.subnets[i].ipAddress = firstIp;
           this.check(firstIp, this.subnets[i].numHosts, i);
         }
