@@ -11,27 +11,27 @@
               <div style="width: 100%">
                 <!-- <div>
                   <q-input
-                    v-model="customer.numClients"
+                    v-model="subnet.numClients"
                     label="Anzahl der Clients"
                   ></q-input>
                 </div> -->
                 <div class="row">
                   <q-input class="col-4" v-model="ipAddress" label="IP "></q-input>
                   <div class="col-2"></div>
-                  <q-input class="col-4" v-model="companyName" label="Firma "></q-input>
+                  <!-- <q-input class="col-4" v-model="companyName" label="Firma "></q-input> -->
                 </div>
 
-                <div v-for="(customer, index) in customers" :key="index">
+                <div v-for="(subnet, index) in subnets" :key="index">
                   <div class="row">
                     <q-input
-                      v-model="customer.name"
-                      :label="customer.labelName"
+                      v-model="subnet.name"
+                      :label="subnet.labelName"
                       class="col-4"
                     ></q-input>
                     <div class="col-2"></div>
                     <q-input
-                      v-model="customer.numHosts"
-                      :label="customer.labelNumHost"
+                      v-model="subnet.numHosts"
+                      :label="subnet.labelNumHost"
                       class="col-4"
                     ></q-input>
                     <q-btn
@@ -50,7 +50,7 @@
                         dense
                         label="CHECK IP :"
                         @click="
-                          check(ipAddress, customer.numHosts, index),
+                          check(ipAddress, subnet.numHosts, index),
                             (notShow_dialog = false)
                         "
                       ></q-btn>
@@ -75,7 +75,7 @@
                       dense
                       label="CHECK IP :"
                       @click="
-                        check(customer.ip, customer.numHosts), (notShow_dialog = false)
+                        check(subnet.ip, subnet.numHosts), (notShow_dialog = false)
                       "
                     ></q-btn>
                   </div> -->
@@ -98,30 +98,35 @@
       </div>
     </div>
 
-    <!-- <div>customers: {{customers[1]}}</div> -->
+    <!-- <div>subnets: {{subnets[1]}}</div> -->
 
     <!-- v-if="result_dialog" style="width: 60%" -->
     <div class="flex justify-center q-mt-lg">
       <div style="width: 60%">
-        <div class="col-12 flex flex-center text-h5" style="background-color: blanchedalmond;">Result</div>
-
-        <div v-for="(customer, index) in customers" :key="index">
+        <div
+          class="col-12 flex flex-center text-h5"
+          style="background-color: blanchedalmond"
+        >
+          Result
+        </div>
+        <div v-for="(subnet, index) in subnets" :key="index">
           <q-card class="q-mt-lg">
             <q-card-actions class="q-pl-lg">
               <div class="row col-12">
-              <div class="col-6 q-mt-sm">
-              Netzname : {{ customer.name }}
-              </div>
-              <div  class="col-5 q-mt-sm">Anzahl Hosts: {{customer.numHosts}}</div>
+                <div class="col-6 q-mt-sm">Netzname : {{ subnet.name }}</div>
+                <div class="col-5 q-mt-sm">Anzahl Hosts: {{ subnet.numHosts }}</div>
               </div>
               <div class="row col-12">
-                <div class="col-6 q-mt-sm">Netzadresse : {{ customer.ipAddress }}</div>
-                <div class="col-5 q-mt-sm">Suffix : {{ customer.suffix }}</div>
+                <div class="col-6 q-mt-sm">Netzadresse : {{ subnet.ipAddress }}</div>
+                <div class="col-5 q-mt-sm">Suffix : {{ subnet.suffix }}</div>
               </div>
 
               <div class="row col-12">
-                <div class="col-6 q-mt-sm">Netzmask : {{ customer.netzmask }}</div>
-                <div class="col-5 q-mt-sm">broadcast : {{ customer.broadcast }}</div>
+                <div class="col-6 q-mt-sm">Netzmask : {{ subnet.netzmask }}</div>
+                <div class="col-5 q-mt-sm">broadcast : {{ subnet.broadcast }}</div>
+              </div>
+              <div>
+              <div class="col-6 q-mt-sm">wildcard : {{ subnet.wildcard }}</div>
               </div>
             </q-card-actions>
           </q-card>
@@ -145,70 +150,67 @@ const checkBoolean = ref("show Check");
 const netzs = [{ label: "Name 1: " }];
 const ipAddress = ref("");
 const companyName = ref("");
-const customers = ref([{ labelName: "Name", labelNumHost: "Anzahl der Hosts" }]);
+const subnets = ref([{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]);
 export default {
   setup() {
     const $q = useQuasar();
     const mathIpi = new mathIp();
     // mathIpi.checkIp(ipAddress.value);
 
-    // console.log("checkIp: ",checkIp(customer.ip))
+    // console.log("checkIp: ",checkIp(subnet.ip))
     // console.log("checkIp mathIp: ", mathIpi.checkIp(ipAddress));
     // console.log("checkIp mathIp: ip ", mathIpi.checkIp("192.165.1.1"));
-    // if (mathIpi.checkIp(customer.ip)) {
+    // if (mathIpi.checkIp(subnet.ip)) {
     //   console.log("check");
     //   checkBoolean = "TRUE";
     // }
 
-    // checkIp(customer.ip.value)
+    // checkIp(subnet.ip.value)
 
     return {
       result_dialog: ref(false),
       notShow_dialog: false,
-      customers,
+      subnets,
       companyName,
       ipAddress,
       addInput() {
-        this.customers.push({
-          labelName: "Name",
+        this.subnets.push({
+          labelName: "Netzname",
           labelNumHost: "Anzahl der Hosts",
         });
       },
       removeInput(index) {
-        this.customers.splice(index, 1);
+        this.subnets.splice(index, 1);
       },
     };
   },
   methods: {
     onSubmit() {
-          this.customers[0].ipAddress = this.ipAddress;
+      this.subnets[0].ipAddress = this.ipAddress;
 
-      for (var i = 0; i < this.customers.length; i++) {
-        var hostNum = this.customers[0].numHosts;
+      for (var i = 0; i < this.subnets.length; i++) {
+        var hostNum = this.subnets[0].numHosts;
 
         this.check(this.ipAddress, hostNum, 0);
         console.log("i: ", i);
         if (i > 0) {
-          // console.log("this.customers[i].broadcast.split('.')", this.customers[i-1].broadcast.split('.'));
-          // console.log("this.customers[i].broadcast.split('.')",this.customers[i].broadcast.split('.'))
-          var broadcastArr = this.customers[i - 1].broadcast.split(".");
-          console.log("broadcastArr ", broadcastArr);
+          var broadcastArr = this.subnets[i - 1].broadcast.split(".");
           var endBroadcast = (parseInt(broadcastArr[3]) + 1).toString();
           broadcastArr[3] = endBroadcast;
           var firstIp = broadcastArr.join(".");
           // console.log("firstIp", firstIp);
           //     const mathIpi = new mathIp();
 
-          //  var suffix =   mathIpi.findSuffix(this.customers[i].numHosts)
+          //  var suffix =   mathIpi.findSuffix(this.subnets[i].numHosts)
           //     console.log("Suffixxxxxx: " ,suffix)
-          this.customers[i].ipAddress = firstIp;
-          this.check(firstIp, this.customers[i].numHosts, i);
+          this.subnets[i].ipAddress = firstIp;
+          this.check(firstIp, this.subnets[i].numHosts, i);
         }
 
-        // console.log("for",this.customers[i].numHosts, " i: ",i)
+        // console.log("for",this.subnets[i].numHosts, " i: ",i)
       }
 
-      console.log("Cusj in submit", customers.value);
+      console.log("Cusj in submit", subnets.value);
     },
 
     check(ip, hostNum, index) {
@@ -217,24 +219,24 @@ export default {
       var suffix = mathIpi.findSuffix(hostNum);
       if (mathIpi.checkIp(ip)) {
         // mathIp.findBroadcast(27,ip)
-         this.customers[index].suffix = suffix
+        this.subnets[index].suffix = suffix;
         const mathIpi2 = new mathIp();
-        this.customers[index].broadcast = mathIpi2
+        this.subnets[index].broadcast = mathIpi2
           .findBroadcast(suffix, ip)
           // .findBroadcast(parseInt(hostNum) + 2, ip)
           .join(".");
-        this.customers[index].wildcard = mathIpi2.findWildCard(
+        this.subnets[index].wildcard = mathIpi2.findWildCard(
           mathIpi2.findNetzMaskeInAList(suffix)
           // mathIpi2.findNetzMaskeInAList(parseInt(hostNum) + 2)
         );
         const netzmask = mathIpi.findNetzMaskeInAList(suffix);
         // const netzmask = mathIpi.findNetzMaskeInAList(parseInt(hostNum) + 2);
 
-        this.customers[index].netzmask = netzmask.join(".");
+        this.subnets[index].netzmask = netzmask.join(".");
         if (this.notShow_dialog != true) {
           this.result_dialog = true;
         }
-        // console.log("customers ", customers.value)
+        // console.log("subnets ", subnets.value)
         // checkBoolean = "TRUE";
       } else {
         this.$q.notify({

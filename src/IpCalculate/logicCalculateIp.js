@@ -47,8 +47,6 @@ export class mathIp {
   }
   return suffix;
 }
-
-
   convertToInt(ip) {
 
     ip = ip.split(".")
