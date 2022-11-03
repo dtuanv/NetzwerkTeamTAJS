@@ -5,7 +5,7 @@
         <q-card>
           <q-form @submit="onSubmit">
             <q-card-section>
-              <div class="flex justify-center text-h5">Information</div>
+              <div class="flex justify-center text-h5">Information1</div>
             </q-card-section>
             <q-card-actions>
               <div style="width: 100%">
