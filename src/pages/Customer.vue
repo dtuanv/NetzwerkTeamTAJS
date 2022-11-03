@@ -181,6 +181,7 @@ export default {
   },
   methods: {
     onSubmit() {
+          this.customers = this.customers.sort((a, b)=> b.numHosts - a.numHosts)
           this.customers[0].ipAddress = this.ipAddress;
 
       for (var i = 0; i < this.customers.length; i++) {
@@ -204,7 +205,8 @@ export default {
           this.customers[i].ipAddress = firstIp;
           this.check(firstIp, this.customers[i].numHosts, i);
         }
-
+          // console.log('Moinmoinmoinmoin');
+          // console.log(this.customers.numHosts);
         // console.log("for",this.customers[i].numHosts, " i: ",i)
       }
 
