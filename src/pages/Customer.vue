@@ -186,7 +186,8 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.subnets[0].ipAddress = this.ipAddress;
+          this.subnets = this.subnets.sort((a, b)=> b.numHosts - a.numHosts)
+          this.subnets[0].ipAddress = this.ipAddress;
 
       for (var i = 0; i < this.subnets.length; i++) {
         var hostNum = this.subnets[0].numHosts;
