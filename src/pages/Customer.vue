@@ -16,13 +16,15 @@
                   ></q-input>
                 </div>
                 <div class="row">
-                  <q-input class="col-4" v-model="ipAddress" label="IP "></q-input>
+                  <q-input class="col-4" v-model="ipAddress" placeholder="edit me" label="IP "></q-input>
+                  <q-icon name="close" @click="ipAddress = ''"></q-icon>
                   <div class="col-2"></div>
                   <q-input
                     class=""
                     v-model="hosts"
                     label="Suffix"
                     style="width: 57px"
+
                   ></q-input>
 
                   <q-btn
@@ -164,7 +166,7 @@ import { mathIp } from "src/ipCalculate/logicCalculateIp";
 const checkBoolean = ref("show Check");
 
 const netzs = [{ label: "Name 1: " }];
-const ipAddress = ref("");
+const ipAddress = ref("192.170.1.0");
 const companyName = ref("");
 const hosts = ref("");
 const suffixMaxResult = ref(0);
