@@ -9,12 +9,12 @@
             </q-card-section>
             <q-card-actions>
               <div style="width: 100%">
-                <!-- <div>
+                <div>
                   <q-input
-                    v-model="subnet.numClients"
-                    label="Anzahl der Clients"
+                    v-model="firmaName"
+                    label="Firmaname"
                   ></q-input>
-                </div> -->
+                </div>
                 <div class="row">
                   <q-input class="col-4" v-model="ipAddress" label="IP "></q-input>
                   <div class="col-2"></div>
@@ -170,6 +170,8 @@ const hosts = ref("");
 const suffixMaxResult = ref(0);
 const suffixMinResult = ref(0);
 const subnets = ref([{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]);
+const firmaName = ref('');
+
 export default {
   setup() {
     const $q = useQuasar();
@@ -195,6 +197,7 @@ export default {
       hosts,
       companyName,
       ipAddress,
+      firmaName,
       addInput() {
         this.subnets.push({
           labelName: "Netzname",
@@ -244,6 +247,15 @@ export default {
         // console.log("for",this.subnets[i].numHosts, " i: ",i)
       }
 
+  axios({
+            method: "post",
+            url: "http://localhost:8686/saveSubnetz",
+            // data: JSON.stringify(product),
+            data:{
+                firmaName: firmaName.value,
+                subnetzSet: subnets.value
+            }
+  })
       console.log("Cusj in submit", subnets.value);
     },
 
