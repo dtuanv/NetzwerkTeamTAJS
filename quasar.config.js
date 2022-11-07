@@ -79,8 +79,22 @@ module.exports = configure(function (ctx) {
       server: {
         type: 'http'
       },
-      port: 8080,
-      open: true // opens browser window automatically
+      port: 8888,
+      open: true ,// opens browser window automatically,
+      // before (app) {
+      //   const cors = require('cors')
+      //   app.use(cors())
+      // }
+      // proxy: {
+      //   // proxy all requests starting with /api to jsonplaceholder
+      //   '/api': {
+      //     target: 'http://localhost:8686',
+      //     changeOrigin: true,
+      //     pathRewrite: {
+      //       '^/api': ''
+      //     }
+      //   }
+      // }
     },
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
@@ -101,7 +115,7 @@ module.exports = configure(function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify','Dialog'
       ]
     },
 

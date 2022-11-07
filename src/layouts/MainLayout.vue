@@ -25,15 +25,20 @@
     >
 
 
-    <q-item  clickable v-ripple to="/customer">
+    <q-item  clickable v-ripple to="/customer/0" >
             <q-item-section avatar>
               <q-icon name="book_online" />
             </q-item-section>
 
-            <q-item-section > Customer </q-item-section>
+            <q-item-section > KUNDEN </q-item-section>
           </q-item>
+          <q-item  clickable v-ripple to="/admin">
+            <q-item-section avatar>
+              <q-icon name="person" />
+            </q-item-section>
 
-
+            <q-item-section > ADMIN </q-item-section>
+          </q-item>
 
 
 

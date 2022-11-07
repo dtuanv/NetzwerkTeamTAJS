@@ -10,13 +10,15 @@
             <q-card-actions>
               <div style="width: 100%">
                 <div>
-                  <q-input
-                    v-model="firmaName"
-                    label="Firmaname"
-                  ></q-input>
+                  <q-input v-model="firmaName" label="Firmaname"></q-input>
                 </div>
                 <div class="row">
-                  <q-input class="col-4" v-model="ipAddress" placeholder="edit me" label="IP "></q-input>
+                  <q-input
+                    class="col-4"
+                    v-model="ipAddress"
+                    placeholder="edit me"
+                    label="IP "
+                  ></q-input>
                   <q-icon name="close" @click="ipAddress = ''"></q-icon>
                   <div class="col-2"></div>
                   <q-input
@@ -24,7 +26,6 @@
                     v-model="hosts"
                     label="Suffix"
                     style="width: 57px"
-
                   ></q-input>
 
                   <q-btn
@@ -42,7 +43,7 @@
                 <div v-for="(subnet, index) in subnets" :key="index">
                   <div class="row">
                     <q-input
-                      v-model="subnet.name"
+                      v-model="subnet.netzname"
                       :label="subnet.labelName"
                       class="col-4"
                     ></q-input>
@@ -61,19 +62,6 @@
                       @click="removeInput(index)"
                     ></q-btn>
                   </div>
-
-                  <!-- <div class="row">
-                    <div class="col-6 q-mt-lg q-ml-lg">
-                      <q-btn
-                        dense
-                        label="CHECK IP :"
-                        @click="
-                          check(ipAddress, subnet.numHosts, index),
-                            (notShow_dialog = false)
-                        "
-                      ></q-btn>
-                    </div>
-                  </div> -->
                 </div>
 
                 <div>
@@ -87,25 +75,18 @@
                   </q-btn>
                 </div>
 
-                <div>
-                  <!-- <div class="col-6 q-mt-lg q-ml-lg">
+                <div class="">
+                  <div class="q-mt-lg col-6 row">
+                    <div class="col-5"></div>
+                    <q-btn  type="submit" color="warning" label="Prüfen" dense class="float-left"></q-btn>
+                  </div>
+                  <div>
                     <q-btn
-                      dense
-                      label="CHECK IP :"
-                      @click="
-                        check(subnet.ip, subnet.numHosts), (notShow_dialog = false)
-                      "
-                    ></q-btn>
-                  </div> -->
-
-                  <div class="col-5">
-                    <q-btn
-                      type="submit"
-                      icon-right="cloud_upload"
+                      label="Speichern"
+                      @click="saveToDB()"
                       color="positive"
-                      label="Submit"
-                      dense
-                      class="q-mt-lg float-right"
+                      class="float-right"
+                      icon-right="cloud_upload"
                     ></q-btn>
                   </div>
                 </div>
@@ -131,7 +112,7 @@
           <q-card class="q-mt-lg">
             <q-card-actions class="q-pl-lg">
               <div class="row col-12">
-                <div class="col-6 q-mt-sm">Netzname : {{ subnet.name }}</div>
+                <div class="col-6 q-mt-sm">Netzname : {{ subnet.netzname }}</div>
                 <div class="col-5 q-mt-sm">Anzahl Hosts: {{ subnet.numHosts }}</div>
               </div>
               <div class="row col-12">
@@ -172,23 +153,30 @@ const hosts = ref("");
 const suffixMaxResult = ref(0);
 const suffixMinResult = ref(0);
 const subnets = ref([{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]);
-const firmaName = ref('');
-
+const firmaName = ref("");
+const companys = ref({})
 export default {
   setup() {
     const $q = useQuasar();
     const mathIpi = new mathIp();
-    // mathIpi.checkIp(ipAddress.value);
+    const route = useRoute();
+    if(route.params.id == 0){
+      console.log("route.params.id",route.params.id)
+      ipAddress.value = '',
+      firmaName.value = '',
+      subnets.value = [{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]
+    }
+    else{
+      axios.get("http://localhost:8989/"+route.params.id).then((response) => {
+      companys.value = response.data;
+      firmaName.value = companys.value.firmaName
+      subnets.value = companys.value.subnetzs.sort((a,b) => b.numHosts - a.numHosts)
+      ipAddress.value = subnets.value[0].ipAddress
+     console.log("companys",subnets.value)
+    });
 
-    // console.log("checkIp: ",checkIp(subnet.ip))
-    // console.log("checkIp mathIp: ", mathIpi.checkIp(ipAddress));
-    // console.log("checkIp mathIp: ip ", mathIpi.checkIp("192.165.1.1"));
-    // if (mathIpi.checkIp(subnet.ip)) {
-    //   console.log("check");
-    //   checkBoolean = "TRUE";
-    // }
+    }
 
-    // checkIp(subnet.ip.value)
 
     return {
       result_dialog: ref(false),
@@ -230,9 +218,7 @@ export default {
           var broadcastArr = this.subnets[i - 1].broadcast.split(".");
           var checkNumEndBroadcast = parseInt(broadcastArr[3]);
 
-
           if (checkNumEndBroadcast == 255) {
-
             broadcastArr[3] = 0;
             broadcastArr[2] = parseInt(broadcastArr[2]) + 1;
           } else {
@@ -249,16 +235,31 @@ export default {
         // console.log("for",this.subnets[i].numHosts, " i: ",i)
       }
 
-  axios({
-            method: "post",
-            url: "http://localhost:8686/saveSubnetz",
-            // data: JSON.stringify(product),
-            data:{
-                firmaName: firmaName.value,
-                subnetzSet: subnets.value
-            }
-  })
-      console.log("Cusj in submit", subnets.value);
+
+    },
+    saveToDB(){
+      if(this.$route.params.id == 0){
+        axios({
+        method: "post",
+        url: "http://localhost:8989/save",
+        data: {
+          firmaName: firmaName.value,
+          subnetzs: subnets.value,
+        },
+      });
+      console.log("SAVED post ", subnets.value)
+      }else{
+        axios({
+        method: "put",
+        url: "http://localhost:8989/edit/"+this.$route.params.id,
+        data: {
+          firmaName: firmaName.value,
+          subnetzs: subnets.value,
+        },
+      });
+      console.log("SAVED put ", subnets.value)
+      }
+
     },
 
     check(ip, hostNum, index) {
