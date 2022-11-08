@@ -25,8 +25,19 @@ function findSuffix(numHost){
   return parseInt(suffix) + 1 ;
 }
 // console.log("suffix", findSuffix('5'))
-
-
+// valueDezimalOfWildcardPerNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
+function findNumWithIndex(x,arr){
+  var y = 0
+  for(var i = 0; i < arr.length; i++ ){
+    if(arr[i] >= x){
+       y = i
+       break;
+    }
+  }
+  return y
+}
+var list26 = [31,127,191,255]
+console.log("findNumWithIndex", findNumWithIndex(29,list26))
 function findNumOfNullInLeftHost(suffix) {
    var arr = [];
    var index = 0;

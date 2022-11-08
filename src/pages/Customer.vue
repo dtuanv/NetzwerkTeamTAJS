@@ -78,7 +78,13 @@
                 <div class="">
                   <div class="q-mt-lg col-6 row">
                     <div class="col-5"></div>
-                    <q-btn  type="submit" color="warning" label="Prüfen" dense class="float-left"></q-btn>
+                    <q-btn
+                      type="submit"
+                      color="warning"
+                      label="Prüfen"
+                      dense
+                      class="float-left"
+                    ></q-btn>
                   </div>
                   <div>
                     <q-btn
@@ -143,6 +149,7 @@ import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import { useRoute, useRouter } from "vue-router";
 import { mathIp } from "src/ipCalculate/logicCalculateIp";
+import { WebApi } from "/src/apis/WebApi";
 
 const checkBoolean = ref("show Check");
 
@@ -154,29 +161,26 @@ const suffixMaxResult = ref(0);
 const suffixMinResult = ref(0);
 const subnets = ref([{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]);
 const firmaName = ref("");
-const companys = ref({})
+const companys = ref({});
 export default {
   setup() {
     const $q = useQuasar();
     const mathIpi = new mathIp();
     const route = useRoute();
-    if(route.params.id == 0){
-      console.log("route.params.id",route.params.id)
-      ipAddress.value = '',
-      firmaName.value = '',
-      subnets.value = [{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]
+    const router = useRouter();
+    if (route.params.id == 0 || route.fullPath == '/'  ) {
+      (ipAddress.value = ""),
+        (firmaName.value = ""),
+        (subnets.value = [{ labelName: "Netzname", labelNumHost: "Anzahl der Hosts" }]);
+    } else {
+      axios.get(`${WebApi.server}/` + route.params.id).then((response) => {
+        companys.value = response.data;
+        firmaName.value = companys.value.firmaName;
+        subnets.value = companys.value.subnetzs.sort((a, b) => b.numHosts - a.numHosts);
+        ipAddress.value = subnets.value[0].ipAddress;
+        console.log("companys", subnets.value);
+      });
     }
-    else{
-      axios.get("http://localhost:8989/"+route.params.id).then((response) => {
-      companys.value = response.data;
-      firmaName.value = companys.value.firmaName
-      subnets.value = companys.value.subnetzs.sort((a,b) => b.numHosts - a.numHosts)
-      ipAddress.value = subnets.value[0].ipAddress
-     console.log("companys",subnets.value)
-    });
-
-    }
-
 
     return {
       result_dialog: ref(false),
@@ -214,11 +218,28 @@ export default {
 
         this.check(this.ipAddress, hostNum, 0);
         console.log("i: ", i);
+        // test
+        if(i == 0){
+          var broadcastorig = this.subnets[i].broadcast;
+         broadcastArr = broadcastorig.split(".");
+          var checkNumEndBroadcast = parseInt(broadcastArr[3]);
+          // checkNumEndBroadcast
+          if (checkNumEndBroadcast > 255) {
+
+            broadcastArr[3] = 255;
+            this.subnets[i].broadcast = broadcastArr.join('.')
+            // broadcastArr[2] = parseInt(broadcastArr[2]) + 1;
+          }
+        // test end
+        }
+
+
         if (i > 0) {
           var broadcastArr = this.subnets[i - 1].broadcast.split(".");
           var checkNumEndBroadcast = parseInt(broadcastArr[3]);
-
+          // checkNumEndBroadcast
           if (checkNumEndBroadcast == 255) {
+
             broadcastArr[3] = 0;
             broadcastArr[2] = parseInt(broadcastArr[2]) + 1;
           } else {
@@ -234,32 +255,45 @@ export default {
 
         // console.log("for",this.subnets[i].numHosts, " i: ",i)
       }
-
-
     },
-    saveToDB(){
-      if(this.$route.params.id == 0){
-        axios({
-        method: "post",
-        url: "http://localhost:8989/save",
-        data: {
-          firmaName: firmaName.value,
-          subnetzs: subnets.value,
-        },
-      });
-      console.log("SAVED post ", subnets.value)
-      }else{
-        axios({
-        method: "put",
-        url: "http://localhost:8989/edit/"+this.$route.params.id,
-        data: {
-          firmaName: firmaName.value,
-          subnetzs: subnets.value,
-        },
-      });
-      console.log("SAVED put ", subnets.value)
-      }
 
+
+    saveToDB() {
+      // console.log("this.$route.params.id",this.$route.fullPath)
+      if (this.$route.params.id == 0 || this.$route.fullPath == '/') {
+        axios({
+          method: "post",
+          url: `${WebApi.server}/save`,
+          data: {
+            firmaName: firmaName.value,
+            subnetzs: subnets.value,
+          },
+        });
+        this.$q.notify({
+          message: "die subnets von der "+firmaName.value+ " wurde gespeichert!",
+          avatar: "/img/logo.png",
+          color: "positive",
+        });
+        this.$router.replace("/admin")
+        console.log("SAVED post ", subnets.value);
+      } else {
+        axios({
+          method: "put",
+
+          url:`${WebApi.server}/edit/` + this.$route.params.id,
+          data: {
+            firmaName: firmaName.value,
+            subnetzs: subnets.value,
+          },
+        });
+        this.$q.notify({
+          message: "die subnets von der "+firmaName.value+ " wurde aktuallisiert!",
+          avatar: "/img/logo.png",
+          color: "positive",
+        });
+        this.$router.replace("/admin")
+        console.log("SAVED put ", subnets.value);
+      }
     },
 
     check(ip, hostNum, index) {
@@ -271,7 +305,7 @@ export default {
         this.subnets[index].suffix = suffix;
         const mathIpi2 = new mathIp();
         this.subnets[index].broadcast = mathIpi2
-          .findBroadcast(suffix, ip)
+          .findBroadcast(suffix, ip,index)
           // .findBroadcast(parseInt(hostNum) + 2, ip)
           .join(".");
         this.subnets[index].wildcard = mathIpi2.findWildCard(
