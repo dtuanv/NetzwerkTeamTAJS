@@ -16,9 +16,6 @@
                 $("#main .hasil").addClass("removeMargin");
                 $("#main .cal .form").addClass("shadow");
 
-
-
-
             var per = 0;
 
                 /*IP*/

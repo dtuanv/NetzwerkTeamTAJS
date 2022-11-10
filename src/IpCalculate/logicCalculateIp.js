@@ -112,7 +112,6 @@ if(Number.isInteger(Math.log2(num))){
 }
 
 findBroadcast(suffix,ip,index){
-  // console.log("index,", index)
  const ipi = this.convertToInt(ip)
   const broadcast = ipi
   const numberOfBitsLeftForHost = this.findNumOfNullInLeftHost(suffix)[0]
@@ -142,7 +141,6 @@ findBroadcast(suffix,ip,index){
                 list25.push(i)
                 i = i +128;
               }
-              // console.log("list30",list30)
               // var list30 = [3,7,11,15,19,23,31,39,47,55,63,71,79,87,95,103,111,119,127,135,143,151,159,167,175,183,191,199,207,215,223,231,239,247,255]
               broadcast[3] = ipi25[3]
              var indexIn25 = this.findNumNearestWithIndex(ipi25[3],list25)
@@ -209,7 +207,6 @@ findBroadcast(suffix,ip,index){
               list30.push(i)
               i = i +4;
             }
-            // console.log("list30",list30)
             // var list30 = [3,7,11,15,19,23,31,39,47,55,63,71,79,87,95,103,111,119,127,135,143,151,159,167,175,183,191,199,207,215,223,231,239,247,255]
             broadcast[3] = ipi30[3]
            var indexIn30 = this.findNumNearestWithIndex(ipi30[3],list30)
@@ -236,16 +233,9 @@ findBroadcast(suffix,ip,index){
           broadcast[3] = 1
          }
         }
-
-
-
-
       }
-
-
     }
   }
-  // broadcast[3] = broadcast[3] - 1
 
   return broadcast;
 }
@@ -257,39 +247,4 @@ findBroadcast(suffix,ip,index){
     }
     return this.wildCard.join(".")
   }
-
-
-
-
-
-
-
 }
-
-// export class findSubnetMask{
-
-//    listStandardHost = [8, 16, 24, 32];
-//    dns = [255, 255, 255, 255];
-//    subValueOfNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
-//    wildCard = [0, 0, 0, 0];
-//    indexDnsNsisaL = [];
-
-//     findSuffix(per){
-//       var arr = [];
-//       var index = 0;
-//       for( var i = 0; i <listStandardHost.length; i++){
-//         if(listStandardHost[i] > per) {
-//           arr.push(listStandardHost[i] - per - 2) ;
-//           arr.push(index);
-//         }
-//         index ++;
-//       }
-//       return arr;
-//     }
-
-// }
-
-
-
-
-

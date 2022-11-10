@@ -103,9 +103,6 @@
       </div>
     </div>
 
-    <!-- <div>subnets: {{subnets[1]}}</div> -->
-
-    <!-- v-if="result_dialog" style="width: 60%" -->
     <div class="flex justify-center q-mt-lg">
       <div style="width: 60%">
         <div
@@ -233,7 +230,6 @@ export default {
         // test end
         }
 
-
         if (i > 0) {
           var broadcastArr = this.subnets[i - 1].broadcast.split(".");
           var checkNumEndBroadcast = parseInt(broadcastArr[3]);
@@ -252,14 +248,10 @@ export default {
           this.subnets[i].ipAddress = firstIp;
           this.check(firstIp, this.subnets[i].numHosts, i);
         }
-
-        // console.log("for",this.subnets[i].numHosts, " i: ",i)
       }
     },
 
-
     saveToDB() {
-      // console.log("this.$route.params.id",this.$route.fullPath)
       if (this.$route.params.id == 0 || this.$route.fullPath == '/') {
         axios({
           method: "post",

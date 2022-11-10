@@ -1,31 +1,15 @@
-// https://jodies.de/ipcalc?host=192.170.1.0&mask1=27&mask2=
-
-
 listMilestonedHost = [8, 16, 24, 32];
 netzmaske = [255, 255, 255, 255];
 valueDezimalOfWildcardsuffixNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
 wildCard = [0, 0, 0, 0];
 indexNetzmaskeNsisaL = [];
 listMilestoned = [1,2,4,8,16,32,64,128]
-// function findSuffix(numHost){
-//   var num = parseInt(numHost) + 2
-//   var suffix = 32
-//   for(var i = 0; i < this.listMilestoned.length; i++){
-//     if(num < this.listMilestoned[i]){
-//       suffix = suffix - i
-//       break
-//     }
-//   }
-//   return suffix;
-// }
 function findSuffix(numHost){
   var num = parseInt(numHost) + 2
   var suffix = Math.log2(num)
 
   return parseInt(suffix) + 1 ;
 }
-// console.log("suffix", findSuffix('5'))
-// valueDezimalOfWildcardPerNullPosition = [0, 1, 3, 7, 15, 31, 63, 127, 255];
 function findNumWithIndex(x,arr){
   var y = 0
   for(var i = 0; i < arr.length; i++ ){
@@ -51,9 +35,6 @@ function findNumOfNullInLeftHost(suffix) {
    return arr;
  }
 
-
-
-
 function findNetzMaskeInAList(suffix){
   const numberOfBitsLeftForHost = findNumOfNullInLeftHost(suffix)[0]
   const indexNetzmaske = findNumOfNullInLeftHost(suffix)[1]
@@ -74,11 +55,6 @@ function convertNetzMaskeToString(suffix){
     netzMaskeArr = findNetzMaskeInAList(suffix)
   return  netzMaskeArr.join('.')
 }
-
-// firstHost = ip[3] + 1;
-//  fistHostInString = firstHost.join(".")
-// ______________
-
     /*Broadcast*/
     ip = '192.170.1.32'
 
